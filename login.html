@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Login</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      background:
+        linear-gradient(rgba(10, 35, 80, 0.78), rgba(10, 35, 80, 0.78)),
+        url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?q=80&w=1920&auto=format&fit=crop');
+      background-size:cover;
+      background-position:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .login-wrapper{
+      width:100%;
+      max-width:1000px;
+    }
+
+    .login-card{
+      border:none;
+      border-radius:28px;
+      overflow:hidden;
+      box-shadow:0 20px 50px rgba(0,0,0,0.18);
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(14px);
+    }
+
+    .left-panel{
+      background:linear-gradient(135deg, rgba(13,44,107,0.95), rgba(13,110,253,0.88));
+      color:white;
+      padding:55px 40px;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .left-panel h1{
+      font-size:2.4rem;
+      font-weight:800;
+      line-height:1.2;
+      margin-bottom:16px;
+    }
+
+    .left-panel p{
+      color:rgba(255,255,255,0.88);
+      font-size:1rem;
+      line-height:1.8;
+      margin-bottom:28px;
+    }
+
+    .feature-pill{
+      background:rgba(255,255,255,0.12);
+      border:1px solid rgba(255,255,255,0.16);
+      border-radius:16px;
+      padding:12px 16px;
+      margin-bottom:12px;
+      font-weight:500;
+    }
+
+    .right-panel{
+      background:rgba(255,255,255,0.92);
+      padding:55px 38px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .brand-badge{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,#0d6efd,#4ea1ff);
+      color:white;
+      font-size:22px;
+      font-weight:700;
+      box-shadow:0 12px 22px rgba(13,110,253,0.20);
+    }
+
+    .login-title{
+      font-size:2rem;
+      font-weight:800;
+      color:#0d2c6b;
+      margin-bottom:6px;
+    }
+
+    .login-subtitle{
+      color:#6b7a90;
+      margin-bottom:28px;
+    }
+
+    .form-label{
+      font-weight:600;
+      color:#1d3557;
+      margin-bottom:8px;
+    }
+
+    .form-control{
+      border-radius:14px;
+      padding:13px 14px;
+      border:1px solid #dbe4f0;
+      box-shadow:none !important;
+      font-size:15px;
+    }
+
+    .form-control:focus{
+      border-color:#0d6efd;
+      box-shadow:0 0 0 0.2rem rgba(13,110,253,0.10) !important;
+    }
+
+    .input-group-text{
+      border-radius:14px 0 0 14px;
+      border:1px solid #dbe4f0;
+      background:#f7faff;
+    }
+
+    .with-icon{
+      border-left:none;
+      border-radius:0 14px 14px 0;
+    }
+
+    .login-btn{
+      border:none;
+      border-radius:14px;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:0.3px;
+      background:linear-gradient(135deg,#0d6efd,#0b5ed7);
+      color:white;
+      transition:0.3s ease;
+      box-shadow:0 14px 25px rgba(13,110,253,0.20);
+    }
+
+    .login-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 18px 30px rgba(13,110,253,0.24);
+    }
+
+    .back-link{
+      text-decoration:none;
+      color:#0d6efd;
+      font-weight:600;
+    }
+
+    .back-link:hover{
+      text-decoration:underline;
+    }
+
+    .pulse-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:#30c67c;
+      display:inline-block;
+      margin-right:8px;
+      animation:pulse 1.5s infinite;
+    }
+
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(48,198,124,0.7);}
+      70%{box-shadow:0 0 0 10px rgba(48,198,124,0);}
+      100%{box-shadow:0 0 0 0 rgba(48,198,124,0);}
+    }
+
+    .fade-up{
+      animation:fadeUp 0.8s ease;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(25px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @media(max-width:768px){
+      .left-panel{
+        padding:34px 24px;
+      }
+
+      .right-panel{
+        padding:34px 24px;
+      }
+
+      .left-panel h1{
+        font-size:2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container login-wrapper fade-up">
+    <div class="card login-card">
+      <div class="row g-0">
+        <div class="col-lg-6">
+          <div class="left-panel">
+            <div class="mb-3">
+              <span class="pulse-dot"></span>
+              <span>Secure Medical Access</span>
+            </div>
+
+            <h1>Doctor Dashboard Login</h1>
+            <p>
+              Access patient analytics, health reports, and AI prediction records
+              through a cleaner and more premium login experience.
+            </p>
+
+            <div class="feature-pill">Patient record management</div>
+            <div class="feature-pill">AI-based health analytics</div>
+            <div class="feature-pill">Medical report downloads</div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="right-panel">
+            <div class="brand">
+              <div class="brand-badge">+</div>
+              <div>
+                <h3 class="login-title mb-0">Welcome Back</h3>
+              </div>
+            </div>
+
+            <p class="login-subtitle">
+              Sign in to continue to the doctor dashboard.
+            </p>
+
+            <form method="post" id="loginForm">
+              <div class="mb-3">
+                <label class="form-label">Username</label>
+                <div class="input-group">
+                  <span class="input-group-text">👨‍⚕️</span>
+                  <input class="form-control with-icon" name="username" placeholder="Enter username" required>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label">Password</label>
+                <div class="input-group">
+                  <span class="input-group-text">🔒</span>
+                  <input class="form-control with-icon" id="passwordField" name="password" type="password" placeholder="Enter password" required>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="showPassword">
+                  <label class="form-check-label" for="showPassword">
+                    Show password
+                  </label>
+                </div>
+
+                <a href="/" class="back-link">Back to Home</a>
+              </div>
+
+              <button class="btn w-100 login-btn" id="loginBtn" type="submit">
+                Login to Dashboard
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const showPassword = document.getElementById("showPassword");
+    const passwordField = document.getElementById("passwordField");
+    const loginForm = document.getElementById("loginForm");
+    const loginBtn = document.getElementById("loginBtn");
+
+    showPassword.addEventListener("change", function(){
+      passwordField.type = this.checked ? "text" : "password";
+    });
+
+    loginForm.addEventListener("submit", function(){
+      loginBtn.innerHTML = "Signing in...";
+      loginBtn.disabled = true;
+    });
+  </script>
+
+</body>
+</html>

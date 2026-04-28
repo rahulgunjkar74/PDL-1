@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospital Disease Detection System</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background: linear-gradient(135deg, #eef4ff, #f8fbff, #eef7ff);
+      color:#1b2430;
+      overflow-x:hidden;
+    }
+
+    .navbar{
+      background: rgba(13, 44, 107, 0.9) !important;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .navbar-brand{
+      font-weight:700;
+      letter-spacing:0.3px;
+    }
+
+    .hero{
+      min-height: 92vh;
+      display:flex;
+      align-items:center;
+      background:
+        linear-gradient(rgba(10, 35, 80, 0.72), rgba(10, 35, 80, 0.72)),
+        url('https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=1920&auto=format&fit=crop');
+      background-size:cover;
+      background-position:center;
+      color:white;
+      position:relative;
+    }
+
+    .hero-badge{
+      display:inline-block;
+      background: rgba(255,255,255,0.16);
+      border:1px solid rgba(255,255,255,0.25);
+      padding:10px 18px;
+      border-radius:999px;
+      font-size:14px;
+      margin-bottom:20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero h1{
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      font-weight:800;
+      line-height:1.15;
+    }
+
+    .hero p{
+      font-size:1.05rem;
+      color:rgba(255,255,255,0.9);
+      max-width:700px;
+      margin:18px auto 0;
+    }
+
+    .hero-btns .btn{
+      padding:13px 28px;
+      border-radius:14px;
+      font-weight:600;
+      margin:10px 8px 0;
+      transition:0.3s ease;
+    }
+
+    .hero-btns .btn:hover{
+      transform:translateY(-3px);
+      box-shadow:0 12px 24px rgba(0,0,0,0.18);
+    }
+
+    .glass-card{
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(16px);
+      border:1px solid rgba(255,255,255,0.55);
+      box-shadow: 0 10px 30px rgba(31, 56, 88, 0.10);
+      border-radius:24px;
+    }
+
+    .section-space{
+      padding: 80px 0;
+    }
+
+    .section-title{
+      font-size:2rem;
+      font-weight:700;
+      color:#0d2c6b;
+      margin-bottom:12px;
+    }
+
+    .section-subtitle{
+      color:#5c6b80;
+      max-width:750px;
+      margin:0 auto 20px;
+    }
+
+    .floating-img{
+      animation: floatY 4s ease-in-out infinite;
+      max-width:100%;
+      filter: drop-shadow(0 18px 24px rgba(0,0,0,0.14));
+    }
+
+    @keyframes floatY{
+      0%{transform:translateY(0px);}
+      50%{transform:translateY(-14px);}
+      100%{transform:translateY(0px);}
+    }
+
+    .form-card{
+      padding:30px;
+      border-radius:24px;
+    }
+
+    .form-label{
+      font-weight:600;
+      color:#19345f;
+      margin-bottom:6px;
+    }
+
+    .form-control{
+      border-radius:14px;
+      padding:12px 14px;
+      border:1px solid #d8e1ef;
+      box-shadow:none !important;
+    }
+
+    .form-control:focus{
+      border-color:#0d6efd;
+      box-shadow:0 0 0 0.2rem rgba(13,110,253,0.10) !important;
+    }
+
+    .predict-btn{
+      border-radius:14px;
+      padding:13px;
+      font-weight:700;
+      letter-spacing:0.3px;
+      transition:0.3s ease;
+    }
+
+    .predict-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 12px 25px rgba(13,110,253,0.20);
+    }
+
+    .mini-card{
+      height:100%;
+      padding:28px 22px;
+      text-align:center;
+      transition:0.35s ease;
+      border-radius:22px;
+    }
+
+    .mini-card:hover{
+      transform:translateY(-8px);
+      box-shadow:0 20px 35px rgba(0,0,0,0.10);
+    }
+
+    .mini-icon{
+      width:64px;
+      height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto 16px;
+      border-radius:18px;
+      font-size:26px;
+      background:linear-gradient(135deg,#0d6efd,#4da3ff);
+      color:white;
+      box-shadow:0 10px 20px rgba(13,110,253,0.18);
+    }
+
+    .info-card{
+      border:none;
+      border-radius:22px;
+      transition:0.35s ease;
+      height:100%;
+    }
+
+    .info-card:hover{
+      transform:translateY(-8px);
+      box-shadow:0 18px 30px rgba(0,0,0,0.10);
+    }
+
+    .info-card .btn{
+      border-radius:12px;
+      font-weight:600;
+    }
+
+    .chart-card,
+    .advice-card,
+    .explanation-card{
+      border-radius:22px;
+      padding:22px;
+      margin-top:18px;
+    }
+
+    .result-box{
+      border:none;
+      border-radius:18px;
+      padding:18px;
+      font-weight:500;
+    }
+
+    .stats-strip{
+      margin-top:-50px;
+      position:relative;
+      z-index:5;
+    }
+
+    .stat-box{
+      padding:24px;
+      border-radius:22px;
+      text-align:center;
+      height:100%;
+    }
+
+    .stat-box h3{
+      font-size:2rem;
+      font-weight:800;
+      color:#0d2c6b;
+      margin-bottom:6px;
+    }
+
+    .stat-box p{
+      color:#64748b;
+      margin:0;
+      font-weight:500;
+    }
+
+    .health-tip-card{
+      border:none;
+      border-radius:22px;
+      padding:26px;
+      box-shadow:0 10px 24px rgba(0,0,0,0.06);
+      transition:0.35s ease;
+      height:100%;
+      background:white;
+    }
+
+    .health-tip-card:hover{
+      transform:translateY(-8px);
+      box-shadow:0 20px 35px rgba(0,0,0,0.10);
+    }
+
+    .footer-main{
+      background:#0d2c6b;
+      color:white;
+      margin-top:60px;
+    }
+
+    .footer-main h5{
+      font-weight:700;
+      margin-bottom:15px;
+    }
+
+    .footer-main p,
+    .footer-main li{
+      color:rgba(255,255,255,0.82);
+    }
+
+    .footer-main ul{
+      list-style:none;
+      padding:0;
+    }
+
+    .social-icons img{
+      width:42px;
+      margin:8px;
+      transition:0.3s ease;
+    }
+
+    .social-icons img:hover{
+      transform:translateY(-5px) scale(1.06);
+    }
+
+    #topBtn{
+      display:none;
+      position:fixed;
+      bottom:24px;
+      right:24px;
+      z-index:999;
+      width:52px;
+      height:52px;
+      border:none;
+      border-radius:50%;
+      background:linear-gradient(135deg,#0d6efd,#0b5ed7);
+      color:white;
+      font-size:20px;
+      box-shadow:0 14px 25px rgba(13,110,253,0.25);
+      transition:0.3s ease;
+    }
+
+    #topBtn:hover{
+      transform:translateY(-4px);
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(35px);
+      transition:all 0.8s ease;
+    }
+
+    .reveal.active{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media(max-width:768px){
+      .hero{
+        min-height:auto;
+        padding:100px 0 70px;
+      }
+
+      .stats-strip{
+        margin-top:20px;
+      }
+
+      .form-card{
+        padding:22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <img src="{{ url_for('static', filename='logo.png') }}" width="55" class="me-2 rounded-circle">
+        <span>Hospital Disease Detection</span>
+      </a>
+
+      <a href="/login" class="btn btn-light fw-semibold px-4 rounded-4">Doctor Login</a>
+    </div>
+  </nav>
+
+  <section class="hero text-center">
+    <div class="container">
+      <span class="hero-badge">Smart AI-Based Preventive Health Screening</span>
+      <h1>AI Powered Disease Detection & Health Monitoring</h1>
+      <p>
+        Detect potential health risks early using blood pressure, sugar level, and cholesterol values.
+        A clean, smart, and modern healthcare dashboard built for faster health screening.
+      </p>
+
+      <div class="hero-btns">
+        <a href="#healthcheck" class="btn btn-primary">Start Health Check</a>
+        <a href="#features" class="btn btn-outline-light">Explore Features</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container stats-strip">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="glass-card stat-box">
+          <h3 class="counter" data-target="95">0</h3>
+          <p>Prediction Accuracy Demo Feel</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="glass-card stat-box">
+          <h3 class="counter" data-target="24">0</h3>
+          <p>Fast Result Generation</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="glass-card stat-box">
+          <h3 class="counter" data-target="3">0</h3>
+          <p>Core Health Parameters</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container section-space" id="healthcheck">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5 reveal">
+        <div class="text-center">
+          <img
+            class="floating-img"
+            src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png"
+            alt="Doctor Illustration"
+            width="360"
+          >
+          <h4 class="mt-4 text-primary fw-bold">AI Assisted Patient Screening</h4>
+          <p class="text-muted">Quickly detect possible health risks through an attractive and simple interface.</p>
+        </div>
+      </div>
+
+      <div class="col-lg-7 reveal">
+        <div class="glass-card form-card">
+          <div class="mb-4">
+            <h2 class="section-title mb-2">Patient Health Check</h2>
+            <p class="text-muted mb-0">Fill in the details below to generate the AI-based health risk prediction.</p>
+          </div>
+
+          <form action="/predict" method="post" id="predictForm">
+            <div class="mb-3">
+              <label class="form-label">Patient Name</label>
+              <input class="form-control" name="name" placeholder="Enter patient name" required>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Age</label>
+                <input class="form-control" name="age" type="number" min="1" max="120" placeholder="Enter age" required>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Blood Pressure</label>
+                <input class="form-control" name="bp" type="number" min="60" max="200" placeholder="Enter BP" required>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Sugar Level</label>
+                <input class="form-control" name="sugar" type="number" min="50" max="500" placeholder="Enter sugar level" required>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Cholesterol</label>
+                <input class="form-control" name="cholesterol" type="number" min="100" max="400" placeholder="Enter cholesterol" required>
+              </div>
+            </div>
+
+            <button class="btn btn-primary w-100 predict-btn" id="predictBtn" type="submit">
+              Detect Disease
+            </button>
+          </form>
+
+          {% if result %}
+          <div class="alert alert-info result-box mt-4 shadow-sm border-0">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+              <div>
+                <strong>AI Risk Score:</strong> {{ result }} %
+              </div>
+              <a
+                class="btn btn-success mt-3 mt-md-0"
+                href="/report/{{ request.form.name }}/{{ request.form.age }}/{{ request.form.bp }}/{{ request.form.sugar }}/{{ request.form.cholesterol }}">
+                Download Medical Report
+              </a>
+            </div>
+          </div>
+
+          <div class="glass-card chart-card">
+            <h5 class="text-center fw-bold text-primary mb-3">Patient Health Analysis</h5>
+            <canvas id="healthChart"></canvas>
+          </div>
+
+          {% if result < 30 %}
+          <div class="alert alert-success advice-card border-0 shadow-sm">
+            <strong>Risk Level: LOW</strong><br>
+            Your health indicators are within a safe range. Maintain a balanced diet, exercise regularly, and continue routine monitoring.
+          </div>
+          {% elif result < 60 %}
+          <div class="alert alert-warning advice-card border-0 shadow-sm">
+            <strong>Risk Level: MEDIUM</strong><br>
+            Some health parameters are elevated. Monitor values regularly and improve diet, activity, and daily health habits.
+          </div>
+          {% else %}
+          <div class="alert alert-danger advice-card border-0 shadow-sm">
+            <strong>Risk Level: HIGH</strong><br>
+            Your values indicate a higher health risk. Please consult a healthcare professional for detailed evaluation and guidance.
+          </div>
+          {% endif %}
+          {% endif %}
+
+          {% if explanation %}
+          <div class="glass-card explanation-card">
+            <h5 class="fw-bold text-primary mb-3">AI Prediction Explanation</h5>
+            <ul class="mb-0">
+              {% for r in explanation %}
+              <li class="mb-2">{{ r }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section-space" id="features">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <h2 class="section-title">Why Early Detection Matters</h2>
+        <p class="section-subtitle">
+          Early diagnosis helps reduce complications, supports better monitoring, and allows faster healthcare decisions.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-3 reveal">
+          <div class="glass-card mini-card">
+            <div class="mini-icon">🛡️</div>
+            <h5 class="fw-bold">Prevent Complications</h5>
+            <p class="text-muted mb-0">Identify risk factors before they develop into serious health issues.</p>
+          </div>
+        </div>
+
+        <div class="col-md-3 reveal">
+          <div class="glass-card mini-card">
+            <div class="mini-icon">🤖</div>
+            <h5 class="fw-bold">AI Analysis</h5>
+            <p class="text-muted mb-0">Get quick pattern-based insights using the AI logic of your system.</p>
+          </div>
+        </div>
+
+        <div class="col-md-3 reveal">
+          <div class="glass-card mini-card">
+            <div class="mini-icon">📈</div>
+            <h5 class="fw-bold">Better Monitoring</h5>
+            <p class="text-muted mb-0">Track patient health parameters more effectively and consistently.</p>
+          </div>
+        </div>
+
+        <div class="col-md-3 reveal">
+          <div class="glass-card mini-card">
+            <div class="mini-icon">⚡</div>
+            <h5 class="fw-bold">Faster Decisions</h5>
+            <p class="text-muted mb-0">Generate immediate health insights for quicker screening support.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-space pt-0">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <h2 class="section-title">Types of Monitoring Tests</h2>
+        <p class="section-subtitle">
+          Learn more about the key health parameters used in your project for disease detection and preventive care.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4 reveal">
+          <div class="card info-card shadow-sm p-4">
+            <h4 class="text-primary fw-bold">Blood Pressure Test</h4>
+            <p class="text-muted">Measures the pressure of blood flowing through arteries.</p>
+            <button class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#bpinfo">Learn More</button>
+            <div id="bpinfo" class="collapse mt-3 text-muted">
+              Blood pressure testing helps identify hypertension and early cardiovascular risk, supporting preventive treatment and routine monitoring.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal">
+          <div class="card info-card shadow-sm p-4">
+            <h4 class="text-primary fw-bold">Blood Sugar Test</h4>
+            <p class="text-muted">Analyzes glucose levels present in the blood.</p>
+            <button class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#sugarinfo">Learn More</button>
+            <div id="sugarinfo" class="collapse mt-3 text-muted">
+              Blood sugar values help assess diabetic risk and metabolic balance, making them essential for continuous health screening.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal">
+          <div class="card info-card shadow-sm p-4">
+            <h4 class="text-primary fw-bold">Cholesterol Test</h4>
+            <p class="text-muted">Measures fat levels present in the bloodstream.</p>
+            <button class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#cholinfo">Learn More</button>
+            <div id="cholinfo" class="collapse mt-3 text-muted">
+              Cholesterol monitoring helps identify cardiovascular risk and encourages healthier lifestyle adjustments.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-space pt-0">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <h2 class="section-title">Platform Features</h2>
+        <p class="section-subtitle">Your system already has strong project features — this layout presents them better.</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4 reveal">
+          <div class="glass-card mini-card">
+            <div class="mini-icon">🧠</div>
+            <h5 class="fw-bold">AI Disease Prediction</h5>
+            <p class="text-muted mb-0">Predict possible health risks based on selected patient parameters.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal">
+          <div class="glass-card mini-card">
+            <div class="mini-icon">📊</div>
+            <h5 class="fw-bold">Instant Risk Score</h5>
+            <p class="text-muted mb-0">Get immediate analysis and a visible health risk percentage.</p>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal">
+          <div class="glass-card mini-card">
+            <div class="mini-icon">🩺</div>
+            <h5 class="fw-bold">Automated Insights</h5>
+            <p class="text-muted mb-0">Show explanation and recommendations using your existing backend logic.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-space pt-0">
+    <div class="container">
+      <div class="text-center mb-5 reveal">
+        <h2 class="section-title">Healthy Lifestyle Tips</h2>
+        <p class="section-subtitle">
+          These tips make the page look richer while staying relevant to your healthcare project.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4 reveal">
+          <div class="health-tip-card">
+            <h4 class="text-primary fw-bold mb-3">🥗 Healthy Diet</h4>
+            <p class="text-muted mb-0">
+              Eat a balanced diet with fruits, vegetables, whole grains, lean protein, and healthy fats.
+              A healthy diet supports stable sugar, cholesterol, and blood pressure levels.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal">
+          <div class="health-tip-card">
+            <h4 class="text-primary fw-bold mb-3">🏃 Regular Exercise</h4>
+            <p class="text-muted mb-0">
+              Daily physical activity helps improve cardiovascular health, metabolism, and mental wellbeing.
+              It also supports better long-term disease prevention.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal">
+          <div class="health-tip-card">
+            <h4 class="text-primary fw-bold mb-3">💧 Stay Hydrated</h4>
+            <p class="text-muted mb-0">
+              Proper hydration supports digestion, circulation, and overall body function.
+              Drinking enough water daily helps maintain better energy and health balance.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-main py-5">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-md-6">
+          <h5>Hospital Disease Detection System</h5>
+          <p class="mb-2">Academic healthcare project with AI-based disease screening and dashboard analytics.</p>
+          <p class="mb-0">© 2026 All Rights Reserved</p>
+        </div>
+
+        <div class="col-md-3">
+          <h5>Quick Links</h5>
+          <ul class="mb-0">
+            <li>Home</li>
+            <li>Health Check</li>
+            <li>Features</li>
+            <li>Doctor Login</li>
+          </ul>
+        </div>
+
+        <div class="col-md-3 text-md-end text-center">
+          <h5>Connect</h5>
+          <div class="social-icons">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram">
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button onclick="topFunction()" id="topBtn">↑</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    {% if result %}
+    const ctx = document.getElementById('healthChart');
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Blood Pressure', 'Sugar Level', 'Cholesterol'],
+        datasets: [{
+          label: 'Health Parameters',
+          data: [{{ request.form.bp }}, {{ request.form.sugar }}, {{ request.form.cholesterol }}],
+          backgroundColor: ['#0d6efd', '#198754', '#dc3545'],
+          borderRadius: 10
+        }]
+      },
+      options: {
+        responsive:true,
+        plugins:{
+          legend:{
+            display:true
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+    {% endif %}
+
+    const predictForm = document.getElementById("predictForm");
+    const predictBtn = document.getElementById("predictBtn");
+
+    if(predictForm){
+      predictForm.addEventListener("submit", function(){
+        predictBtn.innerHTML = "Processing...";
+        predictBtn.disabled = true;
+      });
+    }
+
+    const reveals = document.querySelectorAll(".reveal");
+    function revealOnScroll(){
+      for(let i = 0; i < reveals.length; i++){
+        const windowHeight = window.innerHeight;
+        const elementTop = reveals[i].getBoundingClientRect().top;
+        const elementVisible = 100;
+
+        if(elementTop < windowHeight - elementVisible){
+          reveals[i].classList.add("active");
+        }
+      }
+    }
+    window.addEventListener("scroll", revealOnScroll);
+    revealOnScroll();
+
+    const counters = document.querySelectorAll(".counter");
+    counters.forEach(counter => {
+      const updateCount = () => {
+        const target = +counter.getAttribute("data-target");
+        const count = +counter.innerText;
+        const increment = Math.ceil(target / 60);
+
+        if(count < target){
+          counter.innerText = count + increment > target ? target : count + increment;
+          setTimeout(updateCount, 30);
+        } else {
+          counter.innerText = target;
+        }
+      };
+      updateCount();
+    });
+
+    let mybutton = document.getElementById("topBtn");
+
+    window.onscroll = function () {
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    };
+
+    function topFunction() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
